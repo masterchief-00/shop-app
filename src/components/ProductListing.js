@@ -19,7 +19,7 @@ export const ProductListing = () => {
       ) : null}
       {!products.loading && products.products.length ? (
         <ProductComponent />
-      ) : <div>No products</div>}
+      ) : null}
     </div>
   );
 };

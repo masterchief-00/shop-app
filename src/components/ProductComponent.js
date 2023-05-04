@@ -79,3 +79,5 @@ const ProductContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+

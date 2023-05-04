@@ -6,6 +6,7 @@ import { ProductDetails } from "./components/ProductDetails";
 import { Provider } from "react-redux";
 import store from "./redux";
 import { ProductAdd } from "./components/ProductAdd";
+import { ProductUpdate } from "./components/productUpdate";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<ProductListing />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/product/add" element={<ProductAdd />} />
+            <Route path="/product/:id/update" element={<ProductUpdate />} />
             <Route>404, page not found</Route>
           </Routes>
         </Router>

@@ -3,9 +3,12 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleProduct } from "../redux/productDetails-slice";
 import { useParams } from "react-router-dom";
+import { deleteProduct } from "../redux/productDelete-slice";
+import { Link } from "react-router-dom";
 
 export const ProductDetails = () => {
   const product = useSelector((state) => state.singleProduct);
+  const deleteStatus = useSelector((state) => state.delete);
   const singleProduct = useSelector(
     (state) => state.singleProduct.singleProduct
   );
@@ -13,7 +16,13 @@ export const ProductDetails = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const { title, price, description, images } = singleProduct;
+  const { id, title, price, description, images } = singleProduct;
+
+  const handleDelete = (id) => {
+    dispatch(deleteProduct(id));
+  };
+
+  const handleUpdate = (id) => {};
 
   useEffect(() => {
     dispatch(fetchSingleProduct(params.id));
@@ -41,6 +50,12 @@ export const ProductDetails = () => {
             <div>{description}</div>
             <div>Price: ${price}</div>
           </OtherDetails>
+          <Actions>
+            <Update to={`/product/${id}/update`}>Update</Update>
+            <Delete onClick={() => handleDelete(id)} href="#">
+              {deleteStatus.loading ? "deleting..." : "Delete"}
+            </Delete>
+          </Actions>
         </Container>
       ) : null}
     </Container>
@@ -50,6 +65,8 @@ export const ProductDetails = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
 `;
 const ProductImages = styled.div`
@@ -67,4 +84,28 @@ const Image = styled.img`
   border: solid 1px transparent;
   border-radius: 8px;
   height: 300px;
+`;
+
+const Update = styled(Link)`
+  text-decoration: none;
+  background-color: orange;
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+`;
+const Delete = styled.a`
+  text-decoration: none;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 `;

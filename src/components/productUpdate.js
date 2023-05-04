@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { saveProduct } from "../redux/productAdd-slice";
+import { updateProduct } from "../redux/productUpdate-slice";
+import { useParams } from "react-router-dom";
+import { fetchSingleProduct } from "../redux/productDetails-slice";
 
-export const ProductAdd = () => {
+export const ProductUpdate = () => {
+  const singleProduct = useSelector(
+    (state) => state.singleProduct.singleProduct
+  );
+  const { id, title, price, description, images, category } = singleProduct;
+
   const [uploadData, setUploadData] = useState({
-    title: "",
-    description: "",
-    price: "",
-    images: [],
-    categoryId: "",
+    title,
+    description,
+    price,
+    images,
+    categoryId: category.id,
   });
+
   const dispatch = useDispatch();
 
-  const uploadStatus = useSelector((state) => state.upload);
+  const uploadStatus = useSelector((state) => state.update);
 
   const handleInput = (e) => {
     e.preventDefault();
@@ -35,14 +43,24 @@ export const ProductAdd = () => {
         e.target.name === "categoryId" ? e.target.value : uploadData.categoryId,
     });
   };
+  const params = useParams();
 
   const saveData = (e) => {
     e.preventDefault();
-    dispatch(saveProduct(uploadData));
+    const dataObj={
+      id:params.id,
+      uploadData
+    }
+    dispatch(updateProduct(dataObj));
   };
+
+  useEffect(() => {
+    dispatch(fetchSingleProduct(params.id));
+  }, []);
 
   return (
     <Container>
+      <h1>Update product</h1>
       <Form onSubmit={saveData}>
         <Field
           type="text"
@@ -79,7 +97,7 @@ export const ProductAdd = () => {
           onChange={handleInput}
           placeholder="Product images"
         />
-        <Submit>{uploadStatus.loading ? "saving..." : "Submit"}</Submit>
+        <Submit>{uploadStatus.loading ? "updating..." : "Update"}</Submit>
       </Form>
     </Container>
   );
@@ -118,13 +136,13 @@ const Submit = styled.button`
   padding: 0.8rem;
   width: 8rem;
   margin-top: 10px;
-  background-color: black;
+  background-color: orange;
   border: solid 1px transparent;
   border-radius: 1rem;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  color: white;
+  color: black;
   transition: all 0.2s ease;
 
   &:hover {
